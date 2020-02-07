@@ -47,12 +47,17 @@ exports.addMessage = functions.https.onRequest(async (req, res) => {
 // [START makeUppercaseTrigger]
 exports.makeUppercase = functions.firestore.document('/messages/{documentId}')
     .onCreate((snap, context) => {
-// [END makeUppercaseTrigger]
+    // [END makeUppercaseTrigger]
       // [START makeUppercaseBody]
       // Grab the current value of what was written to the Cloud Firestore.
-      const original = snap.data().original;
-      console.log('Uppercasing', context.params.documentId, original);
-      const uppercase = original.toUpperCase();
+      let uppercase;
+      try{
+        const original = snap.data().original;
+        console.log('Uppercasing', context.params.documentId, original);
+        uppercase = original.toUpperCase();
+      } catch (err){
+          console.log(err)
+      }
       // You must return a Promise when performing asynchronous tasks inside a Functions such as
       // writing to the Cloud Firestore.
       // Setting an 'uppercase' field in the Cloud Firestore document returns a Promise.
